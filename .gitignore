@@ -4,3 +4,10 @@
 # React Router
 /.react-router/
 /build/
+
+# Env vars
+.env
+
+# Prisma
+/prisma/data.db
+/prisma/data.db-journal
