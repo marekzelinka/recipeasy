@@ -21,6 +21,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   recipes       Recipe[]
+  shoppingList  String    @default("")
 
   @@unique([email])
   @@map("user")

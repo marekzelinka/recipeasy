@@ -8,16 +8,22 @@ import type { Route } from "./+types/recipes";
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAuthSession(request);
 
+  const user = await prisma.user.findUniqueOrThrow({
+    select: { shoppingList: true },
+    where: { id: session.user.id },
+  });
+  const shoppingList = user.shoppingList.split(",");
+
   const recipes = await prisma.recipe.findMany({
     where: { userId: session.user.id },
     orderBy: { createdAt: "desc" },
   });
 
-  return { recipes };
+  return { shoppingList, recipes };
 }
 
 export default function Recipes({ loaderData }: Route.ComponentProps) {
-  const { recipes } = loaderData;
+  const { shoppingList, recipes } = loaderData;
 
   return (
     <div className="space-y-8">
@@ -27,7 +33,7 @@ export default function Recipes({ loaderData }: Route.ComponentProps) {
       </nav>
       <section className="space-y-4">
         <h1 className="text-2xl font-bold tracking-tight">Your recipes</h1>
-        <RecipeList recipes={recipes} />
+        <RecipeList shoppingList={shoppingList} recipes={recipes} />
       </section>
     </div>
   );
