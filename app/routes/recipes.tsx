@@ -18,7 +18,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Recipes({ loaderData }: Route.ComponentProps) {
   const { recipes } = loaderData;
-  console.log(recipes);
 
   return (
     <div className="space-y-8">

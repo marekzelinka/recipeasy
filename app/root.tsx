@@ -9,6 +9,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import { Toaster } from "./components/ui/sonner";
+import { TooltipProvider } from "./components/ui/tooltip";
 import { getAuthSession } from "./lib/session.server";
 
 export const links: Route.LinksFunction = () => [
@@ -69,7 +70,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
         <Toaster richColors />
         <ScrollRestoration />
         <Scripts />
