@@ -1,6 +1,6 @@
 import { ChefHatIcon } from "lucide-react";
 import { Link, redirect } from "react-router";
-import { LoginForm } from "~/components/login-form";
+import { LoginForm } from "~/components/auth/login-form";
 import { getAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/welcome";
 
