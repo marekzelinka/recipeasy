@@ -7,6 +7,7 @@ import {
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { data, Form, redirect, useNavigation } from "react-router";
 import urlMetadata from "url-metadata";
+import { ErrorList } from "~/components/error-list";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -15,12 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { ErrorList } from "~/components/ui/error-list";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { prisma } from "~/lib/db.server";
-import { CreateRecipeSchema } from "~/lib/schemas/recipe";
+import { CreateRecipeSchema } from "~/lib/recipes";
 import { requireAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/add-recipe";
 

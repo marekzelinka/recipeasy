@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { authClient } from "~/lib/auth";
 import { useUser } from "~/lib/user";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "./ui/dropdown-menu";
 
 export function UserDropdown() {
   const user = useUser();

@@ -9,16 +9,35 @@ import {
   SidebarGroupLabel,
   SidebarInset,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
 } from "~/components/ui/sidebar";
+import { prisma } from "~/lib/db.server";
+import { requireAuthSession } from "~/lib/session.server";
+import { formatUserShoppingList } from "~/lib/shopping-list";
+import type { Route } from "./+types/sidebar";
 
-export default function SidebarLayout() {
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await requireAuthSession(request);
+
+  const user = await prisma.user.findUniqueOrThrow({
+    select: { shoppingList: true },
+    where: { id: session.user.id },
+  });
+  const shoppingList = formatUserShoppingList(user.shoppingList);
+
+  return { shoppingList };
+}
+
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
+  const { shoppingList } = loaderData;
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar shoppingListCount={shoppingList.length} />
       <SidebarInset>
         <header className="bg-background sticky top-0 flex h-14 shrink-0 items-center gap-2">
           <div className="flex flex-1 items-center gap-2 px-3">
@@ -35,20 +54,21 @@ export default function SidebarLayout() {
   );
 }
 
-const menuItems = [
-  {
-    title: "Recipes",
-    url: "/recipes",
-    icon: CookingPotIcon,
-  },
-  {
-    title: "Shopping List",
-    url: "/shopping-list",
-    icon: ShoppingBasket,
-  },
-];
+function AppSidebar({ shoppingListCount }: { shoppingListCount: number }) {
+  const items = [
+    {
+      title: "Recipes",
+      url: "/recipes",
+      icon: CookingPotIcon,
+    },
+    {
+      title: "Shopping List",
+      url: "/shopping-list",
+      icon: ShoppingBasket,
+      badge: shoppingListCount,
+    },
+  ];
 
-function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
@@ -56,9 +76,12 @@ function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButtonNavLink {...item} />
+                  {item.badge ? (
+                    <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                  ) : null}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
