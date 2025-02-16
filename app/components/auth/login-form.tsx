@@ -47,7 +47,7 @@ function SignInWithGoogleButton() {
       {isPending ? (
         <>
           <div className="absolute inset-y-0 left-4 flex items-center">
-            <LoaderIcon className="animate-spin" aria-hidden />
+            <LoaderIcon aria-hidden className="animate-spin" />
           </div>
           Redirecting...
         </>

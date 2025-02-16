@@ -119,11 +119,11 @@ function RecipeItem({
           </p>
           <div className="flex gap-2">
             <p className="flex items-center gap-1 whitespace-nowrap">
-              <ClockIcon className="size-3.5 opacity-90" aria-hidden />
+              <ClockIcon aria-hidden className="size-3.5 opacity-90" />
               {`${recipe.cookingHours}h ${recipe.cookingMinutes}m`}
             </p>
             <p className="flex items-center gap-1 whitespace-nowrap">
-              <UsersIcon className="size-3.5 opacity-90" aria-hidden />
+              <UsersIcon aria-hidden className="size-3.5 opacity-90" />
               {recipe.servings}
             </p>
           </div>
