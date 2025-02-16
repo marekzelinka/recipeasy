@@ -108,7 +108,7 @@ function RecipeItem({
       </div>
       <div className="space-y-1">
         <p className="truncate text-sm font-medium">
-          <Link to={recipe.id} className="underline underline-offset-4">
+          <Link to={recipe.link} className="underline underline-offset-4">
             {recipe.title}
           </Link>
         </p>
@@ -120,7 +120,9 @@ function RecipeItem({
           <div className="flex gap-2">
             <p className="flex items-center gap-1 whitespace-nowrap">
               <ClockIcon aria-hidden className="size-3.5 opacity-90" />
-              {`${recipe.cookingHours}h ${recipe.cookingMinutes}m`}
+              <span>
+                {`${recipe.cookingHours ? `${recipe.cookingHours}h` : ""} ${recipe.cookingMinutes ? `${recipe.cookingMinutes}m` : ""}`.trim()}
+              </span>
             </p>
             <p className="flex items-center gap-1 whitespace-nowrap">
               <UsersIcon aria-hidden className="size-3.5 opacity-90" />

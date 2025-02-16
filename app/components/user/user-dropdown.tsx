@@ -1,7 +1,7 @@
 import { LogOutIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { authClient } from "~/lib/auth.client";
+import { authClient } from "~/lib/auth";
 import { useUser } from "~/lib/user";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";

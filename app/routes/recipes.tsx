@@ -16,7 +16,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const recipes = await prisma.recipe.findMany({
     where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "asc" },
   });
 
   return { shoppingList, recipes };

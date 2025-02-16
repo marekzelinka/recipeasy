@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 
 export function AddRecipeButton() {
   return (
-    <Form method="POST" action="new">
+    <Form action="new">
       <Button type="submit" size="sm">
         <PlusIcon aria-hidden />
         Add Recipe

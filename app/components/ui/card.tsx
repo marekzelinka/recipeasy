@@ -1,3 +1,4 @@
+import { Slot } from "@radix-ui/react-slot";
 import type { ComponentProps } from "react";
 import { cn } from "~/lib/utils";
 
@@ -24,9 +25,17 @@ export function CardHeader({ className, ...props }: ComponentProps<"div">) {
   );
 }
 
-export function CardTitle({ className, ...props }: ComponentProps<"div">) {
+export function CardTitle({
+  asChild = false,
+  className,
+  ...props
+}: ComponentProps<"div"> & {
+  asChild?: boolean;
+}) {
+  const Comp = asChild ? Slot : "div";
+
   return (
-    <div
+    <Comp
       data-slot="card-title"
       className={cn("leading-none font-semibold tracking-tight", className)}
       {...props}

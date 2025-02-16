@@ -13,7 +13,8 @@ export async function action({ request, params }: Route.ActionArgs) {
   const shoppingList = user.shoppingList.split(",");
 
   const nextShoppingList = updateShoppingList(shoppingList, params.recipeId);
-  const { shoppingList: updatedShoppingList } = await prisma.user.update({
+
+  const updatedUser = await prisma.user.update({
     select: { shoppingList: true },
     data: {
       shoppingList: nextShoppingList,
@@ -24,7 +25,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   return {
     ok: true,
     message: "Shopping list updated successfully",
-    shoppingList: updatedShoppingList,
+    shoppingList: updatedUser.shoppingList,
   };
 }
 

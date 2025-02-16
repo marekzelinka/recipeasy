@@ -8,7 +8,12 @@ import {
 
 export default [
   index("routes/welcome.tsx"),
-  layout("layouts/sidebar.tsx", [route("recipes", "routes/recipes.tsx")]),
+  layout("layouts/sidebar.tsx", [
+    ...prefix("recipes", [
+      index("routes/recipes.tsx"),
+      route("new", "routes/add-recipe.tsx"),
+    ]),
+  ]),
   ...prefix("api", [
     route("shopping-list/update/:recipeId", "api/update-shopping-list.tsx"),
     route("auth/*", "api/auth.tsx"),

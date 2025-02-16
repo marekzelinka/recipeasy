@@ -2,8 +2,8 @@ import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { Form } from "react-router";
 import { toast } from "sonner";
-import { authClient } from "~/lib/auth.client";
-import { envClient } from "~/lib/env.client";
+import { authClient } from "~/lib/auth";
+import { envClient } from "~/lib/env";
 import { GoogleIcon } from "../icons/google-icon";
 import { Button } from "../ui/button";
 
