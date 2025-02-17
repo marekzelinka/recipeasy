@@ -6,7 +6,10 @@ import { EmptyState } from "~/components/ui/empty-state";
 import { Label } from "~/components/ui/label";
 import { prisma } from "~/lib/db.server";
 import { requireAuthSession } from "~/lib/session.server";
-import { formatUserShoppingList } from "~/lib/shopping-list";
+import {
+  formatRecipeIngredients,
+  formatUserShoppingList,
+} from "~/lib/shopping-list";
 import type { Route } from "./+types/shopping-list";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -55,7 +58,9 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
         {recipes.length ? (
           <div className="space-y-4">
             {recipes.map((recipe) => {
-              const ingredientList = recipe.ingredients.split("\n");
+              const ingredientList = formatRecipeIngredients(
+                recipe.ingredients,
+              );
 
               return (
                 <fieldset key={recipe.title} className="space-y-2">

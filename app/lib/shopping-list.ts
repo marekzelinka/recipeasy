@@ -15,3 +15,9 @@ export function updateUserShoppingList(
 
   return nextShoppingList.join(",");
 }
+
+export function formatRecipeIngredients(
+  ingredients: Recipe["ingredients"],
+): string[] {
+  return ingredients.split("\n");
+}
