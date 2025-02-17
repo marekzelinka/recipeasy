@@ -1,7 +1,6 @@
-import { CookingPotIcon } from "lucide-react";
+import { ChevronLeftIcon, CookingPotIcon } from "lucide-react";
 import { Form, Link } from "react-router";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { EmptyState } from "~/components/ui/empty-state";
 import { Label } from "~/components/ui/label";
@@ -31,18 +30,28 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
   const { recipes } = loaderData;
 
   return (
-    <Card className="mx-auto max-w-md">
-      <CardHeader className="flex-row justify-between">
-        <CardTitle asChild className="text-xl">
-          <h1>Shopping list</h1>
-        </CardTitle>
-        <Form method="POST" action="/api/shopping-list/clear" navigate={false}>
-          <Button variant="outline" size="sm">
-            Clear list
-          </Button>
-        </Form>
-      </CardHeader>
-      <CardContent>
+    <div className="space-y-8">
+      <nav aria-label="Primary" className="flex items-center justify-between">
+        <Button asChild variant="outline" size="sm">
+          <Link to="/recipes">
+            <ChevronLeftIcon aria-hidden />
+            Go back
+          </Link>
+        </Button>
+      </nav>
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold tracking-tight">Shopping list</h1>
+          <Form
+            method="POST"
+            action="/api/shopping-list/clear"
+            navigate={false}
+          >
+            <Button variant="secondary" size="sm">
+              Clear list
+            </Button>
+          </Form>
+        </div>
         {recipes.length ? (
           <div className="space-y-4">
             {recipes.map((recipe) => {
@@ -82,7 +91,7 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
             </Button>
           </EmptyState>
         )}
-      </CardContent>
-    </Card>
+      </section>
+    </div>
   );
 }
