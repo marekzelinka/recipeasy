@@ -101,7 +101,7 @@ function SignInWithGoogleButton() {
           }),
           {
             loading: "Redirecting…",
-            success: "Redirected successfully!",
+            success: "You are being redirected…",
             error: "Login redirect failed",
           },
         );
