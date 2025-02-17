@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { EmptyState } from "~/components/ui/empty-state";
 import { UserDropdown } from "~/components/user-dropdown";
 import { prisma } from "~/lib/db.server";
 import { requireAuthSession } from "~/lib/session.server";
@@ -57,17 +58,31 @@ export default function Recipes({ loaderData }: Route.ComponentProps) {
       </nav>
       <section className="space-y-4">
         <h1 className="text-2xl font-bold tracking-tight">Your recipes</h1>
-        <ul role="list" className="grid grid-cols-2 gap-6 md:grid-cols-3">
-          {recipes.map((recipe) => (
-            <li key={recipe.id} className="relative col-span-1">
-              <RecipeItem
-                key={recipe.id}
-                recipe={recipe}
-                shoppingList={shoppingList}
-              />
-            </li>
-          ))}
-        </ul>
+        {recipes.length ? (
+          <ul role="list" className="grid grid-cols-2 gap-6 md:grid-cols-3">
+            {recipes.map((recipe) => (
+              <li key={recipe.id} className="relative col-span-1">
+                <RecipeItem
+                  key={recipe.id}
+                  recipe={recipe}
+                  shoppingList={shoppingList}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyState
+            title="No recipes added"
+            description="You have not added any recipes yet."
+          >
+            <Form action="new">
+              <Button type="submit" size="sm">
+                <PlusIcon aria-hidden />
+                Add Recipe
+              </Button>
+            </Form>
+          </EmptyState>
+        )}
       </section>
     </div>
   );
