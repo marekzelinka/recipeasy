@@ -24,6 +24,8 @@ import { parseRecipe, RecipeSchema } from "~/lib/recipes";
 import { requireAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/add-recipe";
 
+export const meta: Route.MetaFunction = () => [{ title: "Add recipe" }];
+
 export async function action({ request }: Route.ActionArgs) {
   const session = await requireAuthSession(request);
 

@@ -18,6 +18,8 @@ import {
 } from "~/lib/shopping-list";
 import type { Route } from "./+types/shopping-list";
 
+export const meta: Route.MetaFunction = () => [{ title: "Shopping list" }];
+
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAuthSession(request);
 

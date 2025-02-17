@@ -23,6 +23,10 @@ import { parseRecipe, RecipeSchema } from "~/lib/recipes";
 import { requireAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/edit-recipe";
 
+export const meta: Route.MetaFunction = ({ error }) => [
+  { title: error ? "No recipe found" : "Edit recipe" },
+];
+
 export async function loader({ request, params }: Route.LoaderArgs) {
   const session = await requireAuthSession(request);
 
