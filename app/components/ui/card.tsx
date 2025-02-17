@@ -7,7 +7,7 @@ export function Card({ className, ...props }: ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground overflow-hidden rounded-xl border shadow-sm",
+        "overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm",
         className,
       )}
       {...props}
@@ -50,7 +50,7 @@ export function CardDescription({
   return (
     <div
       data-slot="card-description"
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("text-sm text-muted-foreground", className)}
       {...props}
     />
   );

@@ -57,10 +57,10 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
                     {ingredientList.map((ingredient, i) => (
                       <Label
                         key={i}
-                        className="hover:bg-muted grid grid-cols-[auto_1fr] items-center gap-3 rounded-md p-2"
+                        className="grid grid-cols-[auto_1fr] items-center gap-3 rounded-md p-2 hover:bg-muted"
                       >
                         <Checkbox className="peer size-3.5" />
-                        <span className="text-muted-foreground peer-data-[state=checked]:text-muted-foreground/50 select-none peer-data-[state=checked]:line-through">
+                        <span className="text-muted-foreground select-none peer-data-[state=checked]:text-muted-foreground/50 peer-data-[state=checked]:line-through">
                           {ingredient}
                         </span>
                       </Label>

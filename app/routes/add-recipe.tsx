@@ -113,7 +113,7 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
         </CardTitle>
         <CardDescription>
           We recommend adding a{" "}
-          <span className="text-foreground font-semibold">link</span> first so
+          <span className="font-semibold text-foreground">link</span> first so
           we can auto-fill some fields for you.
         </CardDescription>
       </CardHeader>
@@ -163,7 +163,7 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
                     className="w-14"
                     {...getInputProps(fields.servings, { type: "number" })}
                   />
-                  <span aria-hidden className="text-muted-foreground text-sm">
+                  <span aria-hidden className="text-sm text-muted-foreground">
                     people
                   </span>
                 </div>
@@ -193,7 +193,7 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
                       />
                       <span
                         aria-hidden
-                        className="text-muted-foreground text-sm"
+                        className="text-sm text-muted-foreground"
                       >
                         hrs
                       </span>
@@ -214,7 +214,7 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
                       />
                       <span
                         aria-hidden
-                        className="text-muted-foreground text-sm"
+                        className="text-sm text-muted-foreground"
                       >
                         mins
                       </span>

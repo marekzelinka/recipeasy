@@ -21,7 +21,7 @@ export function ErrorList({
     <ul
       role="list"
       id={id}
-      className={cn("text-destructive grid gap-0.5 text-xs", className)}
+      className={cn("grid gap-0.5 text-xs text-destructive", className)}
       {...props}
     >
       {errorsToRender.map((error, i) => (

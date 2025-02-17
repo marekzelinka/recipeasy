@@ -124,7 +124,7 @@ function RecipeItem({
               {recipe.title}
             </Link>
           </p>
-          <div className="text-muted-foreground flex justify-between text-xs font-medium">
+          <div className="flex justify-between text-xs font-medium text-muted-foreground">
             <p className="flex items-center gap-1 whitespace-nowrap">
               <img src={recipe.favicon} alt="" className="size-3.5" />
               {recipe.author}
