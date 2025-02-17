@@ -1,6 +1,6 @@
 import { prisma } from "~/lib/db.server";
 import { requireAuthSession } from "~/lib/session.server";
-import type { Route } from "./+types/clear-shopping-list";
+import type { Route } from "./+types/clear-list";
 
 export async function action({ request }: Route.ActionArgs) {
   const session = await requireAuthSession(request);

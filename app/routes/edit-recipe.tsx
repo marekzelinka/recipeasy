@@ -5,35 +5,75 @@ import {
   useForm,
 } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, TrashIcon } from "lucide-react";
 import { data, Form, Link, redirect, useNavigation } from "react-router";
 import { ErrorList } from "~/components/error-list";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { prisma } from "~/lib/db.server";
 import { parseRecipe, RecipeSchema } from "~/lib/recipes";
 import { requireAuthSession } from "~/lib/session.server";
-import type { Route } from "./+types/add-recipe";
+import type { Route } from "./+types/edit-recipe";
 
-export async function action({ request }: Route.ActionArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   const session = await requireAuthSession(request);
+
+  const recipe = await prisma.recipe.findUnique({
+    select: {
+      id: true,
+      link: true,
+      title: true,
+      author: true,
+      image: true,
+      favicon: true,
+      ingredients: true,
+      servings: true,
+      cookingHours: true,
+      cookingMinutes: true,
+    },
+    where: { id: params.recipeId, userId: session.user.id },
+  });
+  if (!recipe) {
+    throw data("No recipe found", { status: 404 });
+  }
+
+  return { recipe };
+}
+
+export async function action({ request, params }: Route.ActionArgs) {
+  const session = await requireAuthSession(request);
+
+  const recipe = await prisma.recipe.findUnique({
+    select: {
+      id: true,
+      link: true,
+    },
+    where: { id: params.recipeId, userId: session.user.id },
+  });
+  if (!recipe) {
+    throw data("No recipe found", { status: 404 });
+  }
 
   const formData = await request.formData();
 
   const submission = await parseWithZod(formData, {
     schema: RecipeSchema.transform(async (arg) => {
-      const updates = await parseRecipe(arg.link);
+      const shouldUpdateRecipe = arg.link !== recipe.link;
+      if (shouldUpdateRecipe) {
+        const updates = await parseRecipe(arg.link);
 
-      return { ...arg, ...updates };
+        return { ...arg, ...updates };
+      } else {
+        return arg;
+      }
     }),
     async: true,
   });
@@ -46,21 +86,26 @@ export async function action({ request }: Route.ActionArgs) {
 
   const recipeObject = submission.value;
 
-  await prisma.recipe.create({
-    data: {
-      ...recipeObject,
-      user: { connect: { id: session.user.id } },
-    },
+  await prisma.recipe.update({
+    select: { id: true },
+    data: recipeObject,
+    where: { id: recipe.id },
   });
 
   throw redirect("/recipes");
 }
 
-export default function AddRecipe({ actionData }: Route.ComponentProps) {
+export default function EditRecipe({
+  loaderData,
+  actionData,
+}: Route.ComponentProps) {
+  const { recipe } = loaderData;
+
   const navigation = useNavigation();
-  const isSubmitting = navigation.formAction === "/recipes/new";
+  const isSubmitting = navigation.formAction === `/recipes/${recipe.id}/edit`;
 
   const [form, fields] = useForm({
+    defaultValue: recipe,
     lastResult: actionData?.lastResult,
     constraint: getZodConstraint(RecipeSchema),
     onValidate: ({ formData }) =>
@@ -78,15 +123,32 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
         </Button>
       </nav>
       <Card>
-        <CardHeader>
+        <CardHeader className="flex-row items-center justify-between">
           <CardTitle asChild className="text-xl">
-            <h1>Add a Recipe</h1>
+            <h1>Edit Recipe</h1>
           </CardTitle>
-          <CardDescription>
-            We recommend adding a{" "}
-            <span className="font-semibold text-foreground">link</span> first so
-            we can auto-fill some fields for you.
-          </CardDescription>
+          <Form method="POST" action={`/api/destroy-recipe/${recipe.id}`}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  onClick={(event) => {
+                    const shouldDelete = confirm("Are you sure?");
+                    if (!shouldDelete) {
+                      event.preventDefault();
+                    }
+                  }}
+                  className="size-8"
+                >
+                  <TrashIcon aria-hidden />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete recipe</p>
+              </TooltipContent>
+            </Tooltip>
+          </Form>
         </CardHeader>
         <CardContent>
           <Form method="POST" {...getFormProps(form)}>
@@ -207,7 +269,7 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
               </div>
               <div className="flex justify-end">
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Adding…" : "Add recipe"}
+                  {isSubmitting ? "Saving changes…" : "Save changes"}
                 </Button>
               </div>
             </div>

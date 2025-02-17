@@ -4,7 +4,7 @@ import {
   formatUserShoppingList,
   updateUserShoppingList,
 } from "~/lib/shopping-list";
-import type { Route } from "./+types/update-shopping-list";
+import type { Route } from "./+types/update-list";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const session = await requireAuthSession(request);
