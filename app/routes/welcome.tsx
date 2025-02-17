@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { authClient } from "~/lib/auth";
-import { envClient } from "~/lib/env";
 import { getAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/welcome";
 
@@ -94,7 +93,7 @@ function SignInWithGoogleButton() {
         toast.promise(
           authClient.signIn.social({
             provider: "google",
-            callbackURL: envClient.VITE_BETTER_AUTH_CALLBACK_URL,
+            callbackURL: "/recipes",
             fetchOptions: {
               onError: () => setIsPending(false),
             },
