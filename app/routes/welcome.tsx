@@ -2,11 +2,25 @@ import { ChefHatIcon, LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { Form, Link, redirect } from "react-router";
 import { toast } from "sonner";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { authClient } from "~/lib/auth";
-import { envClient } from "~/lib/env";
 import { getAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/welcome";
+
+export const meta: Route.MetaFunction = () => [{ title: "Welcome" }];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await getAuthSession(request);
@@ -20,29 +34,46 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function Welcome() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-center gap-2">
-            <Link
-              to="/"
-              className="flex flex-col items-center gap-2 font-medium"
-            >
-              <div className="flex size-8 items-center justify-center rounded-md">
-                <ChefHatIcon className="size-6" />
-              </div>
-              <span className="sr-only">Recipeasy</span>
-            </Link>
-            <h1 className="text-xl font-bold">Welcome to Recipeasy</h1>
-            <div className="text-center text-sm">
-              A better way to collect all of your favourite recipes and easily
-              prepare your shopping list.
-            </div>
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <Link to="/" className="flex flex-col items-center gap-2 font-medium">
+          <div className="flex size-8 items-center justify-center rounded-md">
+            <ChefHatIcon aria-hidden className="size-6" />
           </div>
-          <Form method="POST">
-            <div className="grid gap-4">
-              <SignInWithGoogleButton />
-            </div>
-          </Form>
+          <span className="sr-only">Acme Inc.</span>
+        </Link>
+        <div className="flex flex-col gap-6">
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl">Welcome to Recipeasy</CardTitle>
+              <CardDescription>
+                A better way to collect all of your favourite recipes and easily
+                prepare your shopping list.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form method="POST">
+                <div className="grid gap-6">
+                  <SignInWithGoogleButton />
+                </div>
+              </Form>
+            </CardContent>
+          </Card>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Privacy Notice</AccordionTrigger>
+              <AccordionContent>
+                We won't use your email address for anything other than
+                authenticating with this demo application.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Terms of Service</AccordionTrigger>
+              <AccordionContent>
+                This is a portfolio project, there are no terms of service.
+                Don't be surprised if your data dissappears.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </div>
@@ -62,14 +93,14 @@ function SignInWithGoogleButton() {
         toast.promise(
           authClient.signIn.social({
             provider: "google",
-            callbackURL: envClient.VITE_BETTER_AUTH_CALLBACK_URL,
+            callbackURL: "/recipes",
             fetchOptions: {
               onError: () => setIsPending(false),
             },
           }),
           {
             loading: "Redirecting…",
-            success: "Redirected successfully!",
+            success: "You are being redirected…",
             error: "Login redirect failed",
           },
         );

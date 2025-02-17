@@ -25,6 +25,8 @@ import { prisma } from "~/lib/db.server";
 import { requireAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/recipes";
 
+export const meta: Route.MetaFunction = () => [{ title: "Recipes" }];
+
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAuthSession(request);
 

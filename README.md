@@ -1,100 +1,38 @@
-# Welcome to React Router!
+# Recipeasy 🧾
 
-A modern, production-ready template for building full-stack React applications using React Router.
+This project lets you collect your favourite recipes and prepare your shopping list.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+It's written in [TypeScript](https://www.typescriptlang.org/) and uses [React](https://react.dev/), a JavaScript UI library, [React Router](https://reactrouter.com/), a full-stack framework, [Prisma](https://www.prisma.io/) for database ORM, [shadcn/ui](https://ui.shadcn.com/) for UI components and [Better Auth](https://www.better-auth.com/) for authentication. I'm hosting the live version at [Fly.io](https://fly.io/).
 
-## Features
+## Get started
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+1. Clone the repository:
 
-## Getting Started
+   ```sh
+   git clone https://github.com/marekzelinka/recipeasy.git
+   ```
 
-### Installation
+2. Install the dependencies:
 
-Install the dependencies:
+   ```sh
+   pnpm i
+   ```
 
-```bash
-npm install
-```
+3. Define required env variables:
 
-### Development
+   - Copy the template contents in [.env.example](.env.example) to a new file named `.env` and fill all the required fields.
+   - You'll need to [follow this guide](https://www.better-auth.com/docs/authentication/google) to get your Google credentials: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
 
-Start the development server with HMR:
+4. Finally, run the app in dev mode by running:
 
-```bash
-npm run dev
-```
+   ```sh
+   pnpm dev
+   ```
 
-Your application will be available at `http://localhost:5173`.
+## Goals
 
-## Building for Production
+I wanted to practice implementing authentication using React and React Router. Also, playing around with shadcn/ui `<Sidebar />` component.
 
-Create a production build:
+## Credits
 
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-This template includes three Dockerfiles optimized for different package managers:
-
-- `Dockerfile` - for npm
-- `Dockerfile.pnpm` - for pnpm
-- `Dockerfile.bun` - for bun
-
-To build and run using Docker:
-
-```bash
-# For npm
-docker build -t my-app .
-
-# For pnpm
-docker build -f Dockerfile.pnpm -t my-app .
-
-# For bun
-docker build -f Dockerfile.bun -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+- _N/A_

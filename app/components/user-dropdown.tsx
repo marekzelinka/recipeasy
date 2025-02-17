@@ -24,7 +24,7 @@ export function UserDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="size-8 overflow-hidden rounded-lg">
           <Avatar className="rounded-lg">
-            <AvatarImage src={undefined} alt={user.name} />
+            <AvatarImage src={user.image ?? undefined} alt={user.name} />
             <AvatarFallback name={user.name} />
           </Avatar>
         </Button>
