@@ -1,6 +1,6 @@
 import { ChefHatIcon, LoaderIcon } from "lucide-react";
 import { useState } from "react";
-import { Form, Link, redirect, type MetaFunction } from "react-router";
+import { Form, Link, redirect } from "react-router";
 import { toast } from "sonner";
 import {
   Accordion,
@@ -21,7 +21,7 @@ import { envClient } from "~/lib/env";
 import { getAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/welcome";
 
-export const meta: MetaFunction = () => [{ title: "Welcome" }];
+export const meta: Route.MetaFunction = () => [{ title: "Welcome" }];
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await getAuthSession(request);
