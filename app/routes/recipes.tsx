@@ -3,8 +3,8 @@ import {
   ClipboardTypeIcon,
   ClockIcon,
   EllipsisVerticalIcon,
+  ListMinusIcon,
   ListPlusIcon,
-  ListXIcon,
   PencilIcon,
   PlusIcon,
   UsersIcon,
@@ -145,7 +145,7 @@ function RecipeItem({
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="size-7">
+            <Button variant="ghost" size="icon" className="size-8">
               <EllipsisVerticalIcon aria-hidden />
               <div className="sr-only">Actions</div>
             </Button>
@@ -156,7 +156,7 @@ function RecipeItem({
           >
             <updateShoppingListFetcher.Form
               method="POST"
-              action={`/api/shopping-list/update/${recipe.id}`}
+              action={`/api/update-list/${recipe.id}`}
             >
               <input type="hidden" name="intent" value="update-shopping-list" />
               <input
@@ -168,7 +168,7 @@ function RecipeItem({
                 <button type="submit">
                   {optimisticIsInnShoppingList ? (
                     <>
-                      <ListXIcon aria-hidden /> Remove from shopping list
+                      <ListMinusIcon aria-hidden /> Remove from shopping list
                     </>
                   ) : (
                     <>

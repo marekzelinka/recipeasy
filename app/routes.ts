@@ -12,15 +12,14 @@ export default [
     ...prefix("recipes", [
       index("routes/recipes.tsx"),
       route("new", "routes/add-recipe.tsx"),
+      route(":recipeId/edit", "routes/edit-recipe.tsx"),
       route("shopping-list", "routes/shopping-list.tsx"),
     ]),
   ]),
   ...prefix("api", [
-    route("shopping-list/clear", "resources/clear-shopping-list.tsx"),
-    route(
-      "shopping-list/update/:recipeId",
-      "resources/update-shopping-list.tsx",
-    ),
+    route("destroy-recipe/:recipeId", "resources/destory-recipe.tsx"),
+    route("clear-list", "resources/clear-list.tsx"),
+    route("update-list/:recipeId", "resources/update-list.tsx"),
     route("auth/*", "resources/auth.tsx"),
   ]),
 ] satisfies RouteConfig;

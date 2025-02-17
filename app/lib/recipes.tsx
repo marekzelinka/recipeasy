@@ -2,7 +2,7 @@ import type { Recipe } from "@prisma/client";
 import urlMetadata from "url-metadata";
 import { z } from "zod";
 
-export const CreateRecipeSchema = z.object({
+export const RecipeSchema = z.object({
   link: z.string({ required_error: "Link is required" }).url("Link is invalid"),
   title: z
     .string({ required_error: "Title is required" })

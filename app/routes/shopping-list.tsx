@@ -1,9 +1,15 @@
-import { ChevronLeftIcon, CookingPotIcon } from "lucide-react";
+import { ChevronLeftIcon, CookingPotIcon, ListXIcon } from "lucide-react";
 import { Form, Link } from "react-router";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { EmptyState } from "~/components/ui/empty-state";
 import { Label } from "~/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { prisma } from "~/lib/db.server";
 import { requireAuthSession } from "~/lib/session.server";
 import {
@@ -33,68 +39,85 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
   const { recipes } = loaderData;
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-md space-y-2">
       <nav aria-label="Primary" className="flex items-center justify-between">
-        <Button asChild variant="outline" size="sm">
+        <Button asChild variant="secondary" size="sm">
           <Link to="/recipes">
             <ChevronLeftIcon aria-hidden />
             Go back
           </Link>
         </Button>
       </nav>
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight">Shopping list</h1>
-          <Form
-            method="POST"
-            action="/api/shopping-list/clear"
-            navigate={false}
-          >
-            <Button variant="destructive" size="sm">
-              Clear list
-            </Button>
+      <Card className="space-y-4">
+        <CardHeader className="flex-row items-center justify-between">
+          <CardTitle asChild className="text-xl">
+            <h1>Shopping list</h1>
+          </CardTitle>
+          <Form method="POST" action="/api/clear-list" navigate={false}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={(event) => {
+                    const shouldClear = confirm("Are you sure?");
+                    if (!shouldClear) {
+                      event.preventDefault();
+                    }
+                  }}
+                  className="size-8"
+                >
+                  <ListXIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Clear list</p>
+              </TooltipContent>
+            </Tooltip>
           </Form>
-        </div>
-        {recipes.length ? (
-          <div className="space-y-6">
-            {recipes.map((recipe) => {
-              const ingredientList = formatRecipeIngredients(
-                recipe.ingredients,
-              );
+        </CardHeader>
+        <CardContent>
+          {recipes.length ? (
+            <div className="space-y-6">
+              {recipes.map((recipe) => {
+                const ingredientList = formatRecipeIngredients(
+                  recipe.ingredients,
+                );
 
-              return (
-                <fieldset key={recipe.title} className="space-y-2">
-                  <Label asChild className="text-base font-semibold">
-                    <legend>{recipe.title}</legend>
-                  </Label>
-                  {ingredientList.map((ingredient, i) => (
-                    <Label
-                      key={i}
-                      className="-mx-2 grid grid-cols-[auto_1fr] items-center gap-3 rounded-md p-2 hover:bg-muted"
-                    >
-                      <Checkbox className="peer size-3.5" />
-                      <span className="select-none peer-data-[state=checked]:text-muted-foreground peer-data-[state=checked]:line-through">
-                        {ingredient}
-                      </span>
+                return (
+                  <fieldset key={recipe.title} className="space-y-2">
+                    <Label asChild className="text-base font-semibold">
+                      <legend>{recipe.title}</legend>
                     </Label>
-                  ))}
-                </fieldset>
-              );
-            })}
-          </div>
-        ) : (
-          <EmptyState
-            title="No recipes added"
-            description="You have not added any recipes yet. Add one from the recipes page."
-          >
-            <Button asChild variant="secondary">
-              <Link to="/recipes">
-                <CookingPotIcon aria-hidden /> Go to your recipes
-              </Link>
-            </Button>
-          </EmptyState>
-        )}
-      </section>
+                    {ingredientList.map((ingredient, i) => (
+                      <Label
+                        key={i}
+                        className="-mx-2 grid grid-cols-[auto_1fr] items-center gap-3 rounded-md p-2 hover:bg-muted"
+                      >
+                        <Checkbox className="peer size-3.5" />
+                        <span className="select-none peer-data-[state=checked]:text-muted-foreground peer-data-[state=checked]:line-through">
+                          {ingredient}
+                        </span>
+                      </Label>
+                    ))}
+                  </fieldset>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState
+              title="No recipes added"
+              description="You have not added any recipes yet. Add one from the recipes page."
+            >
+              <Button asChild variant="secondary">
+                <Link to="/recipes">
+                  <CookingPotIcon aria-hidden /> Go to your recipes
+                </Link>
+              </Button>
+            </EmptyState>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
