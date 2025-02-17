@@ -18,7 +18,12 @@ It's written in [TypeScript](https://www.typescriptlang.org/) and uses [React
    pnpm i
    ```
 
-3. Finally, run the app in dev mode by running:
+3. Define required env variables:
+
+   - Copy the template contents in [.env.example](.env.example) to a new file named `.env` and fill all the required fields.
+   - You'll need to [follow this guide](https://www.better-auth.com/docs/authentication/google) to get your Google credentials: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+
+4. Finally, run the app in dev mode by running:
 
    ```sh
    pnpm dev
