@@ -12,8 +12,8 @@ export default [
     ...prefix("recipes", [
       index("routes/recipes.tsx"),
       route("new", "routes/add-recipe.tsx"),
+      route("shopping-list", "routes/shopping-list.tsx"),
     ]),
-    ...prefix("shopping-list", [index("routes/shopping-list.tsx")]),
   ]),
   ...prefix("api", [
     route("shopping-list/clear", "resources/clear-shopping-list.tsx"),

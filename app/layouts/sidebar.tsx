@@ -63,7 +63,7 @@ function AppSidebar({ shoppingListCount }: { shoppingListCount: number }) {
     },
     {
       title: "Shopping List",
-      url: "/shopping-list",
+      url: "/recipes/shopping-list",
       icon: ShoppingBasket,
       badge: shoppingListCount,
     },
