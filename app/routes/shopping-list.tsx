@@ -50,13 +50,13 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
             action="/api/shopping-list/clear"
             navigate={false}
           >
-            <Button variant="secondary" size="sm">
+            <Button variant="destructive" size="sm">
               Clear list
             </Button>
           </Form>
         </div>
         {recipes.length ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {recipes.map((recipe) => {
               const ingredientList = formatRecipeIngredients(
                 recipe.ingredients,
@@ -67,19 +67,17 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
                   <Label asChild className="text-base font-semibold">
                     <legend>{recipe.title}</legend>
                   </Label>
-                  <div className="space-y-1">
-                    {ingredientList.map((ingredient, i) => (
-                      <Label
-                        key={i}
-                        className="grid grid-cols-[auto_1fr] items-center gap-3 rounded-md p-2 hover:bg-muted"
-                      >
-                        <Checkbox className="peer size-3.5" />
-                        <span className="text-muted-foreground select-none peer-data-[state=checked]:text-muted-foreground/50 peer-data-[state=checked]:line-through">
-                          {ingredient}
-                        </span>
-                      </Label>
-                    ))}
-                  </div>
+                  {ingredientList.map((ingredient, i) => (
+                    <Label
+                      key={i}
+                      className="-mx-2 grid grid-cols-[auto_1fr] items-center gap-3 rounded-md p-2 hover:bg-muted"
+                    >
+                      <Checkbox className="peer size-3.5" />
+                      <span className="select-none peer-data-[state=checked]:text-muted-foreground peer-data-[state=checked]:line-through">
+                        {ingredient}
+                      </span>
+                    </Label>
+                  ))}
                 </fieldset>
               );
             })}
