@@ -6,7 +6,6 @@ import {
 } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { data, Form, redirect, useNavigation } from "react-router";
-import urlMetadata from "url-metadata";
 import { ErrorList } from "~/components/error-list";
 import { Button } from "~/components/ui/button";
 import {
@@ -20,7 +19,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { prisma } from "~/lib/db.server";
-import { CreateRecipeSchema } from "~/lib/recipes";
+import { CreateRecipeSchema, parseRecipe } from "~/lib/recipes";
 import { requireAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/add-recipe";
 
@@ -31,27 +30,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   const submission = await parseWithZod(formData, {
     schema: CreateRecipeSchema.transform(async (arg) => {
-      const metadata = await urlMetadata(arg.link);
-      console.log(metadata);
-
-      const metadataImage = metadata.image as string;
-      const metadataOgImage = metadata["og:image"] as string;
-      const image = metadataImage || metadataOgImage;
-
-      const linkOrigin = new URL(arg.link).origin;
-
-      const defaultFaviconUrl = `${linkOrigin}/favicon.ico`;
-      const metadataFavicons = metadata.favicons as {
-        rel: string;
-        href: string;
-      }[];
-      const faviconIcon = metadataFavicons.find(
-        (favicon) => favicon.rel === "icon",
-      );
-      const faviconIconUrl = faviconIcon?.href
-        ? linkOrigin + faviconIcon.href
-        : "";
-      const favicon = faviconIconUrl || defaultFaviconUrl;
+      const { image, favicon } = await parseRecipe(arg.link);
 
       return { ...arg, image, favicon };
     }),
@@ -64,29 +43,11 @@ export async function action({ request }: Route.ActionArgs) {
     );
   }
 
-  const {
-    link,
-    title,
-    author,
-    image,
-    favicon,
-    ingredients,
-    cookingHours,
-    cookingMinutes,
-    servings,
-  } = submission.value;
+  const recipeObject = submission.value;
 
   await prisma.recipe.create({
     data: {
-      link,
-      title,
-      author,
-      image,
-      favicon,
-      ingredients,
-      servings,
-      cookingHours,
-      cookingMinutes,
+      ...recipeObject,
       user: { connect: { id: session.user.id } },
     },
   });

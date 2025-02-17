@@ -1,3 +1,5 @@
+import type { Recipe } from "@prisma/client";
+import urlMetadata from "url-metadata";
 import { z } from "zod";
 
 export const CreateRecipeSchema = z.object({
@@ -36,3 +38,26 @@ export const CreateRecipeSchema = z.object({
     .min(0, "Cooking hours must be greater than 0")
     .max(59, "Cooking minutes must be less than 59"),
 });
+
+export async function parseRecipe(link: Recipe["link"]) {
+  const metadata = await urlMetadata(link);
+
+  const metadataImage = metadata.image as string;
+  const metadataOgImage = metadata["og:image"] as string;
+  const image = metadataImage || metadataOgImage;
+
+  const linkOrigin = new URL(link).origin;
+
+  const defaultFaviconUrl = `${linkOrigin}/favicon.ico`;
+  const metadataFavicons = metadata.favicons as {
+    rel: string;
+    href: string;
+  }[];
+  const faviconIcon = metadataFavicons.find(
+    (favicon) => favicon.rel === "icon",
+  );
+  const faviconIconUrl = faviconIcon?.href ? linkOrigin + faviconIcon.href : "";
+  const favicon = faviconIconUrl || defaultFaviconUrl;
+
+  return { image, favicon };
+}
