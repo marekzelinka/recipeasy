@@ -14,6 +14,7 @@ export const auth = betterAuth({
       maxAge: 5 * 60, // Cache duration in seconds
     },
   },
+  trustedOrigins: [env.BETTER_AUTH_URL],
   socialProviders: {
     google: {
       prompt: "select_account",
