@@ -1,4 +1,4 @@
-# Recipeasy 🧾
+# Recipeasy 🍳
 
 This project lets you collect your favourite recipes and prepare your shopping list.
 
