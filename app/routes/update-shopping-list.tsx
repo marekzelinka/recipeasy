@@ -1,10 +1,7 @@
+import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
-import { requireAuthSession } from "~/lib/session.server";
-import {
-  formatUserShoppingList,
-  updateUserShoppingList,
-} from "~/lib/shopping-list";
-import type { Route } from "./+types/update-list";
+import { formatShoppingList, updateShoppingList } from "~/lib/recipe";
+import type { Route } from "./+types/update-shopping-list";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const session = await requireAuthSession(request);
@@ -13,12 +10,9 @@ export async function action({ request, params }: Route.ActionArgs) {
     select: { shoppingList: true },
     where: { id: session.user.id },
   });
-  const shoppingList = formatUserShoppingList(user.shoppingList);
+  const shoppingList = formatShoppingList(user.shoppingList);
 
-  const nextShoppingList = updateUserShoppingList(
-    shoppingList,
-    params.recipeId,
-  );
+  const nextShoppingList = updateShoppingList(shoppingList, params.recipeId);
 
   const updatedUser = await prisma.user.update({
     select: { shoppingList: true },

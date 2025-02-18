@@ -20,9 +20,9 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { EmptyState } from "~/components/ui/empty-state";
-import { UserDropdown } from "~/components/user-dropdown";
+import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
-import { requireAuthSession } from "~/lib/session.server";
+import { formatShoppingList } from "~/lib/recipe";
 import type { Route } from "./+types/recipes";
 
 export const meta: Route.MetaFunction = () => [{ title: "Recipes" }];
@@ -34,7 +34,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     select: { shoppingList: true },
     where: { id: session.user.id },
   });
-  const shoppingList = user.shoppingList.split(",");
+  const shoppingList = formatShoppingList(user.shoppingList);
 
   const recipes = await prisma.recipe.findMany({
     where: { userId: session.user.id },
@@ -48,44 +48,41 @@ export default function Recipes({ loaderData }: Route.ComponentProps) {
   const { shoppingList, recipes } = loaderData;
 
   return (
-    <div className="space-y-8">
-      <nav aria-label="Primary" className="flex items-center justify-between">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold tracking-tight">Your recipes</h1>
         <Form action="new">
           <Button type="submit" size="sm">
             <PlusIcon aria-hidden />
             Add Recipe
           </Button>
         </Form>
-        <UserDropdown />
-      </nav>
-      <section className="space-y-4">
-        <h1 className="text-2xl font-bold tracking-tight">Your recipes</h1>
-        {recipes.length ? (
-          <ul role="list" className="grid grid-cols-2 gap-6 md:grid-cols-3">
-            {recipes.map((recipe) => (
-              <li key={recipe.id} className="relative col-span-1">
-                <RecipeItem
-                  key={recipe.id}
-                  recipe={recipe}
-                  shoppingList={shoppingList}
-                />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <EmptyState
-            title="No recipes added"
-            description="You have not added any recipes yet."
-          >
-            <Form action="new">
-              <Button type="submit" size="sm">
-                <PlusIcon aria-hidden />
-                Add Recipe
-              </Button>
-            </Form>
-          </EmptyState>
-        )}
-      </section>
+      </div>
+      {recipes.length ? (
+        <ul role="list" className="grid grid-cols-2 gap-6 md:grid-cols-3">
+          {recipes.map((recipe) => (
+            <li key={recipe.id} className="relative col-span-1">
+              <RecipeItem
+                key={recipe.id}
+                recipe={recipe}
+                shoppingList={shoppingList}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptyState
+          title="No recipes added"
+          description="You have not added any recipes yet."
+        >
+          <Form action="new">
+            <Button type="submit" size="sm">
+              <PlusIcon aria-hidden />
+              Add Recipe
+            </Button>
+          </Form>
+        </EmptyState>
+      )}
     </div>
   );
 }
@@ -157,8 +154,8 @@ function RecipeItem({
             className="w-(--radix-dropdown-menu-trigger-width) min-w-60 rounded-lg"
           >
             <updateShoppingListFetcher.Form
-              method="POST"
-              action={`/api/update-list/${recipe.id}`}
+              method="post"
+              action={`shopping-list/update/${recipe.id}`}
             >
               <input type="hidden" name="intent" value="update-shopping-list" />
               <input

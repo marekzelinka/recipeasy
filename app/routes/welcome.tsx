@@ -1,6 +1,6 @@
-import { ChefHatIcon, LoaderIcon } from "lucide-react";
+import { ChefHatIcon, CookingPotIcon, LoaderIcon } from "lucide-react";
 import { useState } from "react";
-import { Form, Link, redirect } from "react-router";
+import { Link } from "react-router";
 import { toast } from "sonner";
 import {
   Accordion,
@@ -16,31 +16,24 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { useOptionalUser } from "~/hooks/use-user";
 import { authClient } from "~/lib/auth";
-import { getAuthSession } from "~/lib/session.server";
 import type { Route } from "./+types/welcome";
 
-export const meta: Route.MetaFunction = () => [{ title: "Welcome" }];
-
-export async function loader({ request }: Route.LoaderArgs) {
-  const session = await getAuthSession(request);
-  if (session) {
-    throw redirect("/recipes");
-  }
-
-  return {};
-}
+export const meta: Route.MetaFunction = () => [{ title: "Recipeasy" }];
 
 export default function Welcome() {
+  const user = useOptionalUser();
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <Link to="/" className="flex flex-col items-center gap-2 font-medium">
+      <div className="flex w-full max-w-sm flex-col gap-2">
+        <div className="flex flex-col items-center gap-2 font-medium">
           <div className="flex size-8 items-center justify-center rounded-md">
             <ChefHatIcon aria-hidden className="size-6" />
           </div>
-          <span className="sr-only">Acme Inc.</span>
-        </Link>
+          <span className="sr-only">Recipeasy</span>
+        </div>
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">
@@ -51,11 +44,18 @@ export default function Welcome() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form method="POST">
-                <div className="grid gap-6">
-                  <SignInWithGoogleButton />
-                </div>
-              </Form>
+              {user ? (
+                <Button type="button" asChild className="relative w-full">
+                  <Link to="/recipes">
+                    <div className="absolute inset-y-0 left-4 flex items-center">
+                      <CookingPotIcon aria-hidden />
+                    </div>
+                    View your recipes
+                  </Link>
+                </Button>
+              ) : (
+                <SignInWithGoogleButton />
+              )}
             </CardContent>
           </Card>
           <Accordion type="single" collapsible>

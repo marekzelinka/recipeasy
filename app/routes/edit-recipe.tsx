@@ -18,9 +18,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
-import { parseRecipe, RecipeSchema } from "~/lib/recipes";
-import { requireAuthSession } from "~/lib/session.server";
+import { parseRecipe, RecipeSchema } from "~/lib/recipe";
 import type { Route } from "./+types/edit-recipe";
 
 export const meta: Route.MetaFunction = ({ error }) => [
@@ -131,7 +131,7 @@ export default function EditRecipe({
           <CardTitle asChild className="text-xl">
             <h1>Edit Recipe</h1>
           </CardTitle>
-          <Form method="POST" action={`/api/destroy-recipe/${recipe.id}`}>
+          <Form method="post" action={`/recipes/${recipe.id}/destroy`}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -155,7 +155,7 @@ export default function EditRecipe({
           </Form>
         </CardHeader>
         <CardContent>
-          <Form method="POST" {...getFormProps(form)}>
+          <Form method="post" {...getFormProps(form)}>
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor={fields.link.id}>Link</Label>

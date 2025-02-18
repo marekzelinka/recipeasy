@@ -61,3 +61,25 @@ export async function parseRecipe(link: Recipe["link"]) {
 
   return { image, favicon };
 }
+
+export function formatShoppingList(plainShoppingList: string): string[] {
+  return plainShoppingList.split(",").filter(Boolean);
+}
+
+export function updateShoppingList(
+  shoppingList: string[],
+  recipeId: Recipe["id"],
+): string {
+  const foundId = shoppingList.includes(recipeId);
+  const nextShoppingList = foundId
+    ? shoppingList.filter((id) => id !== recipeId)
+    : [...shoppingList, recipeId];
+
+  return nextShoppingList.join(",");
+}
+
+export function formatRecipeIngredients(
+  ingredients: Recipe["ingredients"],
+): string[] {
+  return ingredients.split("\n");
+}

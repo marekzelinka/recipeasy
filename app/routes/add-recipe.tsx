@@ -19,9 +19,9 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
-import { parseRecipe, RecipeSchema } from "~/lib/recipes";
-import { requireAuthSession } from "~/lib/session.server";
+import { parseRecipe, RecipeSchema } from "~/lib/recipe";
 import type { Route } from "./+types/add-recipe";
 
 export const meta: Route.MetaFunction = () => [{ title: "Add recipe" }];
@@ -91,7 +91,7 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form method="POST" {...getFormProps(form)}>
+          <Form method="post" {...getFormProps(form)}>
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor={fields.link.id}>Link</Label>

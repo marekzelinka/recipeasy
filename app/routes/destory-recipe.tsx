@@ -1,10 +1,7 @@
 import { data, redirect } from "react-router";
+import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
-import { requireAuthSession } from "~/lib/session.server";
-import {
-  formatUserShoppingList,
-  updateUserShoppingList,
-} from "~/lib/shopping-list";
+import { formatShoppingList, updateShoppingList } from "~/lib/recipe";
 import type { Route } from "./+types/destory-recipe";
 
 export async function action({ request, params }: Route.ActionArgs) {
@@ -27,12 +24,12 @@ export async function action({ request, params }: Route.ActionArgs) {
     select: { shoppingList: true },
     where: { id: session.user.id },
   });
-  const shoppingList = formatUserShoppingList(user.shoppingList);
+  const shoppingList = formatShoppingList(user.shoppingList);
 
   const isRecipeInShoppingList = shoppingList.includes(recipe.id);
   if (isRecipeInShoppingList) {
     // Remove the deleted recipe id from the shopping list
-    const nextShoppingList = updateUserShoppingList(shoppingList, recipe.id);
+    const nextShoppingList = updateShoppingList(shoppingList, recipe.id);
 
     await prisma.user.update({
       select: { id: true },

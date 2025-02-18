@@ -15,10 +15,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "~/components/ui/sidebar";
+import { UserDropdown } from "~/components/user-dropdown";
+import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
-import { requireAuthSession } from "~/lib/session.server";
-import { formatUserShoppingList } from "~/lib/shopping-list";
-import type { Route } from "./+types/sidebar";
+import { formatShoppingList } from "~/lib/recipe";
+import type { Route } from "./+types/dashboard";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await requireAuthSession(request);
@@ -27,24 +28,27 @@ export async function loader({ request }: Route.LoaderArgs) {
     select: { shoppingList: true },
     where: { id: session.user.id },
   });
-  const shoppingList = formatUserShoppingList(user.shoppingList);
+  const shoppingList = formatShoppingList(user.shoppingList);
 
   return { shoppingList };
 }
 
-export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
+export default function DashboardLayout({ loaderData }: Route.ComponentProps) {
   const { shoppingList } = loaderData;
 
   return (
     <SidebarProvider>
       <AppSidebar shoppingListCount={shoppingList.length} />
       <SidebarInset>
-        <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background">
+        <header className="flex h-14 shrink-0 items-center gap-2">
           <div className="flex flex-1 items-center gap-2 px-3">
             <SidebarTrigger />
           </div>
+          <div className="ml-auto px-3">
+            <UserDropdown />
+          </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex flex-1 flex-col gap-4 px-4 py-10">
           <div className="mx-auto w-full max-w-3xl flex-1">
             <Outlet />
           </div>
@@ -106,9 +110,8 @@ function SidebarMenuButtonNavLink({
 
   return (
     <SidebarMenuButton asChild isActive={isActive}>
-      <NavLink to={url}>
-        <Icon aria-hidden />
-        <span>{title}</span>
+      <NavLink to={url} prefetch="intent">
+        <Icon aria-hidden /> {title}
       </NavLink>
     </SidebarMenuButton>
   );
