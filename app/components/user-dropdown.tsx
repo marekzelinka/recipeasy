@@ -48,18 +48,11 @@ export function UserDropdown() {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
-            toast.promise(
-              authClient.signOut({
-                fetchOptions: {
-                  onSuccess: () => navigate("/"),
-                },
-              }),
-              {
-                loading: "Signing out…",
-                success: "Signed out successfully!",
-                error: "Error signing out",
-              },
-            );
+            toast.promise(authClient.signOut(), {
+              loading: "Signing out…",
+              success: "Signed out successfully!",
+              error: "Error signing out",
+            });
           }}
         >
           <LogOutIcon aria-hidden />
