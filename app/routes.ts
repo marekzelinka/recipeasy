@@ -23,5 +23,8 @@ export default [
       ]),
     ]),
   ]),
-  ...prefix("api", [route("auth/*", "routes/auth.tsx")]),
+  ...prefix("api", [
+    route("autofill", "routes/autofill.tsx"),
+    route("auth/*", "routes/auth.tsx"),
+  ]),
 ] satisfies RouteConfig;

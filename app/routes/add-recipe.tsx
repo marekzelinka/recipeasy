@@ -6,7 +6,15 @@ import {
 } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { ChevronLeftIcon } from "lucide-react";
-import { data, Form, Link, redirect, useNavigation } from "react-router";
+import { useEffect, useState } from "react";
+import {
+  data,
+  Form,
+  Link,
+  redirect,
+  useFetcher,
+  useNavigation,
+} from "react-router";
 import { ErrorList } from "~/components/error-list";
 import { Button } from "~/components/ui/button";
 import {
@@ -21,7 +29,8 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
-import { parseRecipe, RecipeSchema } from "~/lib/recipe";
+import { type ParseLinkData } from "~/lib/parse-link";
+import { RecipeSchema } from "~/lib/recipe";
 import type { Route } from "./+types/add-recipe";
 
 export const meta: Route.MetaFunction = () => [{ title: "Add recipe" }];
@@ -31,14 +40,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   const formData = await request.formData();
 
-  const submission = await parseWithZod(formData, {
-    schema: RecipeSchema.transform(async (arg) => {
-      const updates = await parseRecipe(arg.link);
-
-      return { ...arg, ...updates };
-    }),
-    async: true,
-  });
+  const submission = parseWithZod(formData, { schema: RecipeSchema });
   if (submission.status !== "success") {
     return data(
       { lastResult: submission.reply() },
@@ -69,6 +71,21 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
       parseWithZod(formData, { schema: RecipeSchema }),
   });
 
+  const autoFillFetcher = useFetcher<ParseLinkData>();
+  const [controlledFields, setControlledFields] = useState({
+    title: fields.title.initialValue,
+    author: fields.author.initialValue,
+    image: fields.image.initialValue,
+    favicon: fields.favicon.initialValue,
+  });
+
+  useEffect(() => {
+    if (fields.link.dirty && autoFillFetcher.data?.ok) {
+      const { title, author, image, favicon } = autoFillFetcher.data.data;
+      setControlledFields({ title, author, image, favicon });
+    }
+  }, [fields.link.dirty, autoFillFetcher.data]);
+
   return (
     <div className="mx-auto max-w-md space-y-2">
       <nav aria-label="Primary" className="flex items-center justify-between">
@@ -92,10 +109,41 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
         </CardHeader>
         <CardContent>
           <Form method="post" {...getFormProps(form)}>
+            <input
+              value={controlledFields.image}
+              onChange={(event) =>
+                setControlledFields((controlledFields) => ({
+                  ...controlledFields,
+                  image: event.target.value,
+                }))
+              }
+              {...getInputProps(fields.image, { type: "hidden" })}
+            />
+            <input
+              value={controlledFields.favicon}
+              onChange={(event) =>
+                setControlledFields((controlledFields) => ({
+                  ...controlledFields,
+                  favicon: event.target.value,
+                }))
+              }
+              {...getInputProps(fields.favicon, { type: "hidden" })}
+            />
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor={fields.link.id}>Link</Label>
-                <Input {...getInputProps(fields.link, { type: "url" })} />
+                <Input
+                  onChange={(event) => {
+                    autoFillFetcher.submit(
+                      { link: event.target.value ?? "" },
+                      {
+                        method: "get",
+                        action: "/api/autofill",
+                      },
+                    );
+                  }}
+                  {...getInputProps(fields.link, { type: "url" })}
+                />
                 <ErrorList
                   id={fields.link.errorId}
                   errors={fields.link.errors}
@@ -103,7 +151,16 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor={fields.title.id}>Title</Label>
-                <Input {...getInputProps(fields.title, { type: "text" })} />
+                <Input
+                  value={controlledFields.title}
+                  onChange={(event) =>
+                    setControlledFields((controlledFields) => ({
+                      ...controlledFields,
+                      title: event.target.value,
+                    }))
+                  }
+                  {...getInputProps(fields.title, { type: "text" })}
+                />
                 <ErrorList
                   id={fields.title.errorId}
                   errors={fields.title.errors}
@@ -111,7 +168,16 @@ export default function AddRecipe({ actionData }: Route.ComponentProps) {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor={fields.author.id}>Author</Label>
-                <Input {...getInputProps(fields.author, { type: "text" })} />
+                <Input
+                  value={controlledFields.author}
+                  onChange={(event) =>
+                    setControlledFields((controlledFields) => ({
+                      ...controlledFields,
+                      author: event.target.value,
+                    }))
+                  }
+                  {...getInputProps(fields.author, { type: "text" })}
+                />
                 <ErrorList
                   id={fields.author.errorId}
                   errors={fields.author.errors}
