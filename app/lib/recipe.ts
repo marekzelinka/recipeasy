@@ -9,9 +9,22 @@ export const RecipeSchema = z.object({
     .trim()
     .nonempty("Title is too short"),
   author: z
-    .string({ required_error: "Author is required" })
+    .string()
     .trim()
-    .nonempty("Author is too short"),
+    .optional()
+    .transform((arg) => arg || ""),
+  image: z
+    .string()
+    .trim()
+    .url("Image is invalid URL")
+    .optional()
+    .transform((arg) => arg || ""),
+  favicon: z
+    .string()
+    .trim()
+    .url("Favicon is invalid URL")
+    .optional()
+    .transform((arg) => arg || ""),
   ingredients: z
     .string({ required_error: "Ingredient list is required" })
     .trim()
