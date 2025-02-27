@@ -9,7 +9,7 @@ import {
   PlusIcon,
   UsersIcon,
 } from "lucide-react";
-import { Form, Link, useFetcher } from "react-router";
+import { Form, href, Link, useFetcher } from "react-router";
 import { toast } from "sonner";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Button } from "~/components/ui/button";
@@ -155,7 +155,9 @@ function RecipeItem({
           >
             <updateShoppingListFetcher.Form
               method="post"
-              action={`shopping-list/update/${recipe.id}`}
+              action={href("/recipes/shopping-list/update/:recipeId", {
+                recipeId: recipe.id,
+              })}
             >
               <input type="hidden" name="intent" value="update-shopping-list" />
               <input

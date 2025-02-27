@@ -35,7 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <TooltipProvider>{children}</TooltipProvider>
-        <Toaster richColors />
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

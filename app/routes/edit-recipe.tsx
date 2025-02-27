@@ -1,6 +1,6 @@
 import { parseWithZod } from "@conform-to/zod";
 import { ChevronLeftIcon, TrashIcon } from "lucide-react";
-import { data, Form, Link, redirect, useNavigation } from "react-router";
+import { data, Form, href, Link, redirect, useNavigation } from "react-router";
 import { RecipeForm } from "~/components/recipe-form";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -86,7 +86,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     where: { id: recipe.id },
   });
 
-  throw redirect("/recipes");
+  throw redirect(href("/recipes"));
 }
 
 export default function EditRecipe({
@@ -98,13 +98,14 @@ export default function EditRecipe({
 
   const navigation = useNavigation();
   const isSubmitting =
-    navigation.formAction === `/recipes/${params.recipeId}/edit`;
+    navigation.formAction ===
+    href("/recipes/:recipeId/edit", { recipeId: params.recipeId });
 
   return (
     <div className="mx-auto max-w-md space-y-2">
       <nav aria-label="Primary" className="flex items-center justify-between">
         <Button asChild variant="secondary" size="sm">
-          <Link to="/recipes">
+          <Link to={href("/recipes")}>
             <ChevronLeftIcon aria-hidden />
             Go back
           </Link>
@@ -115,7 +116,12 @@ export default function EditRecipe({
           <CardTitle asChild className="text-xl">
             <h1>Edit Recipe</h1>
           </CardTitle>
-          <Form method="post" action={`/recipes/${params.recipeId}/destroy`}>
+          <Form
+            method="post"
+            action={href("/recipes/:recipeId/destroy", {
+              recipeId: params.recipeId,
+            })}
+          >
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

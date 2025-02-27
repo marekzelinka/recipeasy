@@ -1,4 +1,4 @@
-import { data, redirect } from "react-router";
+import { data, href, redirect } from "react-router";
 import { requireAuthSession } from "~/lib/auth.server";
 import { prisma } from "~/lib/db.server";
 import { formatShoppingList, updateShoppingList } from "~/lib/recipe";
@@ -38,5 +38,5 @@ export async function action({ request, params }: Route.ActionArgs) {
     });
   }
 
-  return redirect("/recipes");
+  return redirect(href("/recipes"));
 }

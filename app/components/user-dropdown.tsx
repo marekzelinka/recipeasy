@@ -1,5 +1,5 @@
 import { LogOutIcon } from "lucide-react";
-import { useNavigate } from "react-router";
+import { href, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useUser } from "~/hooks/use-user";
 import { authClient } from "~/lib/auth";
@@ -51,7 +51,7 @@ export function UserDropdown() {
             toast.promise(
               authClient.signOut({
                 fetchOptions: {
-                  onSuccess: () => navigate("/"),
+                  onSuccess: () => navigate(href("/")),
                 },
               }),
               {

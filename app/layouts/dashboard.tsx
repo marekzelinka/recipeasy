@@ -1,6 +1,6 @@
 import { CookingPotIcon, ShoppingBasket } from "lucide-react";
 import type { JSX } from "react";
-import { NavLink, Outlet, useMatch } from "react-router";
+import { href, NavLink, Outlet, useMatch } from "react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -62,12 +62,12 @@ function AppSidebar({ shoppingListCount }: { shoppingListCount: number }) {
   const items = [
     {
       title: "Recipes",
-      url: "/recipes",
+      url: href("/recipes"),
       icon: CookingPotIcon,
     },
     {
       title: "Shopping List",
-      url: "/recipes/shopping-list",
+      url: href("/recipes/shopping-list"),
       icon: ShoppingBasket,
       badge: shoppingListCount,
     },

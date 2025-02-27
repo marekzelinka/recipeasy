@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, CookingPotIcon, ListXIcon } from "lucide-react";
-import { Form, Link } from "react-router";
+import { Form, href, Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { EmptyState } from "~/components/ui/empty-state";
@@ -35,7 +35,7 @@ export default function ShoppingList({ loaderData }: Route.ComponentProps) {
     <div className="mx-auto max-w-lg space-y-2">
       <nav aria-label="Primary" className="flex items-center justify-between">
         <Button asChild variant="secondary" size="sm">
-          <Link to="/recipes">
+          <Link to={href("/recipes")}>
             <ChevronLeftIcon aria-hidden />
             Go back
           </Link>

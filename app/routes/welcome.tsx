@@ -1,6 +1,6 @@
 import { ChefHatIcon, CookingPotIcon, LoaderIcon } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router";
+import { href, Link } from "react-router";
 import { toast } from "sonner";
 import {
   Accordion,
@@ -46,7 +46,7 @@ export default function Welcome() {
             <CardContent>
               {user ? (
                 <Button type="button" asChild className="relative w-full">
-                  <Link to="/recipes">
+                  <Link to={href("/recipes")}>
                     <div className="absolute inset-y-0 left-4 flex items-center">
                       <CookingPotIcon aria-hidden />
                     </div>

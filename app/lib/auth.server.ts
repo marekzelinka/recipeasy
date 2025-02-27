@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { redirect } from "react-router";
+import { href, redirect } from "react-router";
 import { prisma } from "./db.server";
 import { env } from "./env.server";
 
@@ -32,7 +32,10 @@ export async function getAuthSession(request: Request) {
   return session;
 }
 
-export async function requireAuthSession(request: Request, redirectTo = "/") {
+export async function requireAuthSession(
+  request: Request,
+  redirectTo = href("/"),
+) {
   const session = await getAuthSession(request);
   if (!session) {
     throw redirect(redirectTo);

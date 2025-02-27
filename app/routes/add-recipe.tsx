@@ -1,6 +1,6 @@
 import { parseWithZod } from "@conform-to/zod";
 import { ChevronLeftIcon } from "lucide-react";
-import { data, Link, redirect, useNavigation } from "react-router";
+import { data, href, Link, redirect, useNavigation } from "react-router";
 import { RecipeForm } from "~/components/recipe-form";
 import { Button } from "~/components/ui/button";
 import {
@@ -39,18 +39,18 @@ export async function action({ request }: Route.ActionArgs) {
     },
   });
 
-  throw redirect("/recipes");
+  throw redirect(href("/recipes"));
 }
 
 export default function AddRecipe({ actionData }: Route.ComponentProps) {
   const navigation = useNavigation();
-  const isSubmitting = navigation.formAction === "/recipes/new";
+  const isSubmitting = navigation.formAction === href("/recipes/new");
 
   return (
     <div className="mx-auto max-w-md space-y-2">
       <nav aria-label="Primary" className="flex items-center justify-between">
         <Button asChild variant="secondary" size="sm">
-          <Link to="/recipes">
+          <Link to={href("/recipes")}>
             <ChevronLeftIcon aria-hidden />
             Go back
           </Link>
