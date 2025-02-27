@@ -7,6 +7,7 @@ import {
   ListPlusIcon,
   PencilIcon,
   PlusIcon,
+  ShoppingBasketIcon,
   UsersIcon,
 } from "lucide-react";
 import { Form, href, Link, useFetcher } from "react-router";
@@ -17,6 +18,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { EmptyState } from "~/components/ui/empty-state";
@@ -109,12 +111,22 @@ function RecipeItem({
 
   return (
     <div className="flex flex-col gap-2">
-      <AspectRatio ratio={16 / 9}>
+      <AspectRatio ratio={16 / 9} className="relative">
         <img
           src={recipe.image}
           alt=""
           className="size-full rounded-md object-cover"
         />
+        {optimisticIsInnShoppingList ? (
+          <div className="absolute right-1 bottom-1 block translate-x-1/2 translate-y-1/2 transform rounded-full border-2 border-background">
+            <div className="flex size-6 items-center justify-center rounded-full bg-background">
+              <ShoppingBasketIcon
+                aria-hidden
+                className="size-4 text-muted-foreground"
+              />
+            </div>
+          </div>
+        ) : null}
       </AspectRatio>
       <div className="flex items-center gap-2">
         <div className="min-w-0 flex-1 space-y-1">
@@ -165,7 +177,13 @@ function RecipeItem({
                 name="isInShoppingList"
                 value={optimisticIsInnShoppingList ? "false" : "true"}
               />
-              <DropdownMenuItem asChild className="w-full">
+              <DropdownMenuItem
+                asChild
+                variant={
+                  optimisticIsInnShoppingList ? "destructive" : "default"
+                }
+                className="w-full"
+              >
                 <button type="submit">
                   {optimisticIsInnShoppingList ? (
                     <>
@@ -179,6 +197,7 @@ function RecipeItem({
                 </button>
               </DropdownMenuItem>
             </updateShoppingListFetcher.Form>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleCopyTitle}>
               <ClipboardTypeIcon aria-hidden /> Copy title
             </DropdownMenuItem>
