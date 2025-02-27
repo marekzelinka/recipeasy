@@ -7,6 +7,7 @@ import {
 } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import type { Recipe } from "@prisma/client";
+import { LoaderIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Form, useFetcher } from "react-router";
 import { ErrorList } from "~/components/error-list";
@@ -89,18 +90,27 @@ export function RecipeForm({
       <div className="grid gap-4">
         <div className="grid gap-2">
           <Label htmlFor={fields.link.id}>Link</Label>
-          <Input
-            onChange={(event) => {
-              autoFillFetcher.submit(
-                { link: event.target.value ?? "" },
-                {
-                  method: "get",
-                  action: "/api/autofill",
-                },
-              );
-            }}
-            {...getInputProps(fields.link, { type: "url" })}
-          />
+          <div className="grid grid-cols-1">
+            <Input
+              onChange={(event) => {
+                autoFillFetcher.submit(
+                  { link: event.target.value ?? "" },
+                  {
+                    method: "get",
+                    action: "/api/autofill",
+                  },
+                );
+              }}
+              className="col-start-1 row-start-1 pr-10"
+              {...getInputProps(fields.link, { type: "url" })}
+            />
+            {autoFillFetcher.state !== "idle" ? (
+              <LoaderIcon
+                aria-hidden
+                className="pointer-events-none col-start-1 row-start-1 mr-3 size-4 animate-spin self-center justify-self-end text-muted-foreground"
+              />
+            ) : null}
+          </div>
           <ErrorList id={fields.link.errorId} errors={fields.link.errors} />
         </div>
         <div className="grid gap-2">
