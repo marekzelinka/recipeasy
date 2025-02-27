@@ -10,6 +10,7 @@ import {
   ShoppingBasketIcon,
   UsersIcon,
 } from "lucide-react";
+import { startTransition, useOptimistic } from "react";
 import { Form, href, Link, useFetcher } from "react-router";
 import { toast } from "sonner";
 import { AspectRatio } from "~/components/ui/aspect-ratio";
@@ -98,10 +99,11 @@ function RecipeItem({
 }) {
   const updateShoppingListFetcher = useFetcher();
 
-  const isInShoppingList = shoppingList.includes(recipe.id);
-  const optimisticIsInnShoppingList = updateShoppingListFetcher.formData
-    ? updateShoppingListFetcher.formData.get("isInShoppingList") === "true"
-    : isInShoppingList;
+  const included = shoppingList.includes(recipe.id);
+  const [optimisticIncluded, setOptimisticIncluded] = useOptimistic(
+    included,
+    (state) => state,
+  );
 
   const handleCopyTitle = async () => {
     toast.promise(window.navigator.clipboard.writeText(recipe.title), {
@@ -117,7 +119,7 @@ function RecipeItem({
           alt=""
           className="size-full rounded-md object-cover"
         />
-        {optimisticIsInnShoppingList ? (
+        {optimisticIncluded ? (
           <div className="absolute right-1 bottom-1 block translate-x-1/2 translate-y-1/2 transform rounded-full border-2 border-background">
             <div className="flex size-6 items-center justify-center rounded-full bg-background">
               <ShoppingBasketIcon
@@ -171,21 +173,18 @@ function RecipeItem({
                 recipeId: recipe.id,
               })}
             >
-              <input type="hidden" name="intent" value="update-shopping-list" />
-              <input
-                type="hidden"
-                name="isInShoppingList"
-                value={optimisticIsInnShoppingList ? "false" : "true"}
-              />
               <DropdownMenuItem
                 asChild
-                variant={
-                  optimisticIsInnShoppingList ? "destructive" : "default"
-                }
+                variant={optimisticIncluded ? "destructive" : "default"}
                 className="w-full"
+                onClick={() =>
+                  startTransition(() =>
+                    setOptimisticIncluded(!optimisticIncluded),
+                  )
+                }
               >
                 <button type="submit">
-                  {optimisticIsInnShoppingList ? (
+                  {optimisticIncluded ? (
                     <>
                       <ListMinusIcon aria-hidden /> Remove from shopping list
                     </>
