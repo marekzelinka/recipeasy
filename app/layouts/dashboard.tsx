@@ -1,4 +1,4 @@
-import { CookingPotIcon, ShoppingBasket } from "lucide-react";
+import { CookingPotIcon, ShoppingBasketIcon } from "lucide-react";
 import type { JSX } from "react";
 import { href, NavLink, Outlet, useMatch } from "react-router";
 import {
@@ -68,7 +68,7 @@ function AppSidebar({ shoppingListCount }: { shoppingListCount: number }) {
     {
       title: "Shopping List",
       url: href("/recipes/shopping-list"),
-      icon: ShoppingBasket,
+      icon: ShoppingBasketIcon,
       badge: shoppingListCount,
     },
   ];
